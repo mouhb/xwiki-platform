@@ -329,7 +329,7 @@
     </dependency>
 
     <!-- ********************************************************************** -->
-    <!-- Plugins, hard to install as extensions -->
+    <!-- Plugins, hard to install as extensions (we need to get rid of all that) -->
 
     <!-- Skin Extension -->
     <dependency>
@@ -463,6 +463,22 @@
       <version>${project.version}</version>
       <type>zip</type>
       <scope>runtime</scope>
+    </dependency>
+
+    <!-- ********************************************************************** -->
+    <!-- Add dependencies on the base flavor for the mainwiki and for subwikis so that we transitively
+         include all JAR dependencies in the generated WAR -->
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-distribution-flavor-main</artifactId>
+      <version>${project.version}</version>
+      <type>xar</type>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.enterprise</groupId>
+      <artifactId>xwiki-platform-distribution-flavor-wiki</artifactId>
+      <version>${project.version}</version>
+      <type>xar</type>
     </dependency>
   </dependencies>
   <build>
