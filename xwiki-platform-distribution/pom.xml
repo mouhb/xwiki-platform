@@ -32,7 +32,10 @@
   <packaging>pom</packaging>
   <description>XWiki Platform - Distribution - Parent POM</description>
   <modules>
+    <module>xwiki-platform-distribution-flavor</module>
     <module>xwiki-platform-distribution-war</module>
+    <module>xwiki-platform-distribution-jetty-hsqldb</module>
+    <module>xwiki-platform-distribution-debian</module>
   </modules>
   <properties>
     <!-- Don't run CLIRR on distribution packages they are not really supposed to contain Java code and certainly no APIs -->

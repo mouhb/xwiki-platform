@@ -475,7 +475,7 @@
       <type>xar</type>
     </dependency>
     <dependency>
-      <groupId>org.xwiki.enterprise</groupId>
+      <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-distribution-flavor-wiki</artifactId>
       <version>${project.version}</version>
       <type>xar</type>
