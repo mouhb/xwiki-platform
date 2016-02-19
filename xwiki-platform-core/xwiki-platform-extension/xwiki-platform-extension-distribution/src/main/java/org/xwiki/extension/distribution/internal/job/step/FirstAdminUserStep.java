@@ -24,13 +24,20 @@ import com.xpn.xwiki.plugin.rightsmanager.RightsManager;
 @InstantiationStrategy(ComponentInstantiationStrategy.PER_LOOKUP)
 public class FirstAdminUserStep extends AbstractDistributionStep
 {
-    public static final String ID = "extension.firstadminuser";
+    /**
+     * The identifier of the step.
+     */
+    public static final String ID = "firstadminuser";
 
     @Inject
     private transient Logger logger;
 
+    @Inject
     private transient Provider<XWikiContext> xcontextProvider;
 
+    /**
+     * Default constructor.
+     */
     public FirstAdminUserStep()
     {
         super(ID);
