@@ -98,16 +98,21 @@ environment.permanentDirectory=$xwikiPropertiesEnvironmentPermanentDirectory
 #-# Specifies how links labels are displayed when the user doesn't specify the label explicitly.
 #-# Valid values:
 #-#   %w: wiki name
-#-#   %s: space name
+#-#   %s: full space name (e.g. space1.space2)
+#-#       Note: Prior to 7.4.2/8.0M2 this was only displaying the last space name
+#-#   %ls: last space name. New in 7.4.2/8.0M2
 #-#   %p: page name
+#-#   %np: nested page name (i.e. will display the space name for Nested Pages). New in 7.4.2/8.0M2
 #-#   %P: page name with spaces between camel case words, i.e. "My Page" if the page name is "MyPage"
+#-#   %NP: nested page name with spaces between camel case words, i.e. "My Page" if the page name is "MyPage".
+#-#        New in 7.4.2/8.0M2
 #-#   %t: page title
 #-#
-#-# Note that if the page title is empty or not defined then it defaults to %p. This is also the case
+#-# Note that if the page title is empty or not defined then it defaults to %np. This is also the case
 #-# if the title cannot be retrieved for the document.
 #-#
-#-# The default is "%p". Some examples: "%s.%p", "%w:%s.%p".
-# rendering.linkLabelFormat = %p
+#-# The default is "%np". Some examples: "%s.%p", "%w:%s.%p".
+# rendering.linkLabelFormat = %np
 
 #-# [Since 2.0M3]
 #-# Overrides default macro categories (Each macro has a default category already defined, for example
@@ -307,8 +312,7 @@ rendering.transformations = $xwikiRenderingTransformations
 #-#   velocity.properties = velocimacro.messages.on = false
 #-#   velocity.properties = resource.manager.logwhenfound = false
 #-#   velocity.properties = velocimacro.permissions.allow.inline.local.scope = true
-#-#   velocity.properties = runtime.introspector.uberspect = org.xwiki.velocity.introspection.ChainingUberspector
-#-#   velocity.properties = runtime.introspector.uberspect.chainClasses = org.xwiki.velocity.introspection.SecureUberspector\,org.xwiki.velocity.introspection.DeprecatedCheckUberspector\,org.xwiki.velocity.introspection.MethodArgumentsUberspector
+#-#   velocity.properties = runtime.introspector.uberspect = org.xwiki.velocity.introspection.SecureUberspector\,org.xwiki.velocity.introspection.DeprecatedCheckUberspector\,org.xwiki.velocity.introspection.MethodArgumentsUberspector
 
 #-------------------------------------------------------------------------------------
 # Groovy
@@ -723,6 +727,23 @@ extension.oldflavors=$oldFlavor.trim()
 #-# Indicate if web resources should be loaded minified by default.
 #-# It's enabled by default which can make js/css hard to read.
 # debug.minify=false
+
+#-------------------------------------------------------------------------------------
+# LESS CSS
+#-------------------------------------------------------------------------------------
+
+#-# [Since 7.4.2, 8.0M2]
+#-# The number of LESS compilations that can be performed simultaneously. Put a little number if your resources are
+#-# limited.
+#-#
+#-# The default is:
+# lesscss.maximumSimultaneousCompilations = 4
+
+#-# [Since 8.0RC1]
+#-# Generate sourcemaps inline in the CSS files.
+#-#
+#-# The default is:
+# lesscss.generateInlineSourceMaps = false
 
 
 $!xwikiPropertiesAdditionalProperties

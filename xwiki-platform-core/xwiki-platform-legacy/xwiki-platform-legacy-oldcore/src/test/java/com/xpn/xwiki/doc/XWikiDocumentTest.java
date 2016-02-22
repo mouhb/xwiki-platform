@@ -50,7 +50,7 @@ import com.xpn.xwiki.web.XWikiMessageTool;
 
 /**
  * Unit tests for {@link XWikiDocument}.
- * 
+ *
  * @version $Id$
  */
 public class XWikiDocumentTest extends AbstractBridgedXWikiComponentTestCase
@@ -186,6 +186,7 @@ public class XWikiDocumentTest extends AbstractBridgedXWikiComponentTestCase
         mockVelocityManager.stubs().method("getVelocityEngine").will(returnValue(this.mockVelocityEngine.proxy()));
         velocityEngineEvaluateStub = new CustomStub("Implements VelocityEngine.evaluate")
         {
+            @Override
             public Object invoke(Invocation invocation) throws Throwable
             {
                 // Output the given text without changes.

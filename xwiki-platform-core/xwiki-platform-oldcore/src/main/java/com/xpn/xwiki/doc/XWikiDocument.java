@@ -103,7 +103,6 @@ import org.xwiki.model.reference.ObjectPropertyReference;
 import org.xwiki.model.reference.ObjectReference;
 import org.xwiki.model.reference.ObjectReferenceResolver;
 import org.xwiki.model.reference.SpaceReference;
-import org.xwiki.model.reference.SpaceReferenceResolver;
 import org.xwiki.model.reference.WikiReference;
 import org.xwiki.query.Query;
 import org.xwiki.query.QueryException;
@@ -118,6 +117,7 @@ import org.xwiki.rendering.block.XDOM;
 import org.xwiki.rendering.block.match.ClassBlockMatcher;
 import org.xwiki.rendering.block.match.MacroBlockMatcher;
 import org.xwiki.rendering.internal.parser.MissingParserException;
+import org.xwiki.rendering.internal.resolver.DefaultResourceReferenceEntityReferenceResolver;
 import org.xwiki.rendering.listener.reference.ResourceReference;
 import org.xwiki.rendering.listener.reference.ResourceType;
 import org.xwiki.rendering.parser.ContentParser;
@@ -307,19 +307,11 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
     }
 
     /**
-     * Used to resolve a string into a proper Space Reference using the current space's reference to fill the blanks.
+     * Used to resolve a ResourceReference into a proper Entity Reference using the current document to fill the blanks.
      */
-    private static SpaceReferenceResolver<String> getDefaultStringSpaceReferenceResolver()
+    private static EntityReferenceResolver<ResourceReference> getResourceReferenceEntityReferenceResolver()
     {
-        return Utils.getComponent(SpaceReferenceResolver.TYPE_STRING);
-    }
-
-    /**
-     * Used to resolve a string into a proper Space Reference using the default model configuration to fill the blanks.
-     */
-    private static SpaceReferenceResolver<String> getCurrentSpaceReferenceResolver()
-    {
-        return Utils.getComponent(SpaceReferenceResolver.TYPE_STRING, "current");
+        return Utils.getComponent(DefaultResourceReferenceEntityReferenceResolver.TYPE_RESOURCEREFERENCE);
     }
 
     private static EntityReferenceResolver<String> getXClassEntityReferenceResolver()
@@ -343,14 +335,6 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
     private static DocumentReferenceResolver<EntityReference> getCurrentReferenceDocumentReferenceResolver()
     {
         return Utils.getComponent(DocumentReferenceResolver.TYPE_REFERENCE, "current");
-    }
-
-    /**
-     * Used to normalize references to default values.
-     */
-    private static DocumentReferenceResolver<EntityReference> getDefaultReferenceDocumentReferenceResolver()
-    {
-        return Utils.getComponent(DocumentReferenceResolver.TYPE_REFERENCE);
     }
 
     /**
@@ -466,9 +450,7 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
 
     /**
      * Wiki syntax supported by this document. This is used to support different syntaxes inside the same wiki. For
-     * example a page can use the Confluence 2.0 syntax while another one uses the XWiki 1.0 syntax. In practice our
-     * first need is to support the new rendering component. To use the old rendering implementation specify a
-     * "xwiki/1.0" syntaxId and use a "xwiki/2.0" syntaxId for using the new rendering component.
+     * example a page can use the MediaWiki 1.0 syntax while another one uses the XWiki 2.1 syntax.
      */
     private Syntax syntax;
 
@@ -1206,7 +1188,7 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
 
     /**
      * @param text the text to render
-     * @param syntaxId the id of the Syntax used by the passed text (for example: "xwiki/1.0")
+     * @param syntaxId the id of the Syntax used by the passed text (e.g. {@code xwiki/2.1})
      * @param context the XWiki Context object
      * @return the given text rendered in the context of this document using the passed Syntax
      * @since 1.6M1
@@ -1218,7 +1200,7 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
 
     /**
      * @param text the text to render
-     * @param syntaxId the id of the Syntax used by the passed text (for example: "xwiki/1.0")
+     * @param syntaxId the id of the Syntax used by the passed text (e.g. {@code xwiki/2.1})
      * @param restrictedTransformationContext see {@link DocumentDisplayerParameters#isTransformationContextRestricted}.
      * @param context the XWiki Context object
      * @return the given text rendered in the context of this document using the passed Syntax
@@ -1233,7 +1215,7 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
 
     /**
      * @param text the text to render
-     * @param sourceSyntaxId the id of the Syntax used by the passed text (for example: "xwiki/1.0")
+     * @param sourceSyntaxId the id of the Syntax used by the passed text (e.g. {@code xwiki/2.1})
      * @param targetSyntaxId the id of the syntax in which to render the document content
      * @return the given text rendered in the context of this document using the passed Syntax
      * @since 2.0M3
@@ -1245,7 +1227,7 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
 
     /**
      * @param text the text to render
-     * @param sourceSyntaxId the id of the Syntax used by the passed text (for example: "xwiki/1.0")
+     * @param sourceSyntaxId the id of the Syntax used by the passed text (e.g. {@code xwiki/2.1})
      * @param targetSyntaxId the id of the syntax in which to render the document content
      * @param restrictedTransformationContext see {@link DocumentDisplayerParameters#isTransformationContextRestricted}.
      * @return the given text rendered in the context of this document using the passed Syntax
@@ -1503,8 +1485,8 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
     }
 
     /**
-     * Similar to {@link #getRenderedTitle(Syntax, XWikiContext)} but the Syntax used is XHTML 1.0 unless the current
-     * skin defines another output Syntax in which case it's the one used.
+     * Similar to {@link #getRenderedTitle(Syntax, XWikiContext)} but the output Syntax used is XHTML 1.0 unless the
+     * current skin defines another output Syntax in which case it's the one used.
      *
      * @param context the XWiki context
      * @return the rendered version of the document title
@@ -5064,7 +5046,7 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
      * Get a list of unique links from this document to others documents.
      * <p>
      * <ul>
-     * <li>1.0 content: get the unique links associated to document from database. This is stored when the document is
+     * <li>xwiki/1.0 content: get the unique links associated to document from database. This is stored when the document is
      * saved. You can use "backlinks" in XWikiPreferences or "xwiki.backlinks" in xwiki.cfg file to enable links storage
      * in the database.</li>
      * <li>Other content: call {@link #getUniqueLinkedPages(XWikiContext)} and generate the List</li>.
@@ -5072,7 +5054,7 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
      *
      * @param context the XWiki context
      * @return the found wiki links.
-     * @throws XWikiException error when getting links from database when 1.0 content.
+     * @throws XWikiException error when getting links from database when xwiki/1.0 content.
      * @since 1.9M2
      */
     public Set<XWikiLink> getUniqueWikiLinkedPages(XWikiContext context) throws XWikiException
@@ -5099,8 +5081,8 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
     }
 
     /**
-     * Extract all the unique static (i.e. not generated by macros) wiki links (pointing to wiki page) from this 1.0
-     * document's content to others documents.
+     * Extract all the unique static (i.e. not generated by macros) wiki links (pointing to wiki page) from this
+     * xwiki/1.0 document's content to others documents.
      *
      * @param context the XWiki context.
      * @return the document names for linked pages, if null an error append.
@@ -5205,6 +5187,7 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
             } else {
                 XDOM dom = getXDOM();
 
+                // TODO: Add support for macro as well.
                 List<LinkBlock> linkBlocks =
                     dom.getBlocks(new ClassBlockMatcher(LinkBlock.class), Block.Axes.DESCENDANT);
                 pageNames = new LinkedHashSet<String>(linkBlocks.size());
@@ -5216,30 +5199,23 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
                     String referenceString = reference.getReference();
                     ResourceType resourceType = reference.getType();
 
+                    // TODO: Add support for ATTACHMENT as well.
                     if (!ResourceType.DOCUMENT.equals(resourceType) && !ResourceType.SPACE.equals(resourceType)) {
                         // We are only interested in Document or Space references.
                         continue;
                     }
 
-                    // If the reference is empty, the link is an autolink and we don`t include it.
+                    // Optimisation: If the reference is empty, the link is an autolink and we don`t include it.
                     if (StringUtils.isEmpty(referenceString)) {
                         continue;
                     }
 
-                    // The reference may not have the space or even document specified (in case of an empty string)
-                    // Thus we need to find the fully qualified document name
-                    DocumentReference documentReference = null;
-                    if (ResourceType.DOCUMENT.equals(resourceType)) {
-                        // Resolve the document reference as it is.
-                        documentReference = getCurrentDocumentReferenceResolver().resolve(referenceString);
-                    } else {
-                        // Resolve the space reference first
-                        SpaceReference spaceReferencere = getCurrentSpaceReferenceResolver().resolve(referenceString);
-                        // Resolve and use the space's homepage.
-                        documentReference = getDefaultReferenceDocumentReferenceResolver().resolve(spaceReferencere);
-                    }
+                    // FIXME?: pass this.getDocumentReference as parameter to the resolve so that relative references
+                    // get resolved relative to this and not to the context document.
+                    EntityReference documentReference =
+                        getResourceReferenceEntityReferenceResolver().resolve(reference, EntityType.DOCUMENT);
 
-                    // Verify that the link is not an autolink (i.e. a link to the current document)
+                    // Verify after resolving it that the link is not an autolink(i.e. a link to the current document)
                     if (!documentReference.equals(currentDocumentReference)) {
                         // Since this method is used for saving backlinks and since backlinks must be
                         // saved with the space and page name but without the wiki part, we remove the wiki
@@ -6630,38 +6606,28 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
             // xwiki-platform-refactoring-default
             boolean modified = false;
             for (Block block : blocks) {
-                // Determine the reference string and reference type for each block type.
-                String referenceString = linkedResourceHelper.getResourceReferenceString(block);
-                if (referenceString == null) {
+                ResourceReference resourceReference = linkedResourceHelper.getResourceReference(block);
+                if (resourceReference == null) {
                     // Skip invalid blocks.
                     continue;
                 }
-                ResourceType resourceType = linkedResourceHelper.getResourceType(block);
 
+                ResourceType resourceType = resourceReference.getType();
+
+                // TODO: support ATTACHMENT as well.
                 if (!ResourceType.DOCUMENT.equals(resourceType) && !ResourceType.SPACE.equals(resourceType)) {
-                    // We are only interested in Document or Space references.
+                    // We are currently only interested in Document or Space references.
                     continue;
                 }
 
-                EntityReference oldLinkReference = null;
-                EntityReference newLinkReference = null;
-                if (ResourceType.DOCUMENT.equals(resourceType)) {
-                    // current link, use the old document's reference to fill in blanks.
-                    oldLinkReference =
-                        getExplicitDocumentReferenceResolver().resolve(referenceString, oldDocumentReference);
-
-                    // new link, use the new document's reference to fill in blanks.
-                    newLinkReference =
-                        getExplicitDocumentReferenceResolver().resolve(referenceString, newDocumentReference);
-                } else {
-                    // current link, use the old document's reference to fill in blanks.
-                    oldLinkReference =
-                        getDefaultStringSpaceReferenceResolver().resolve(referenceString, oldDocumentReference);
-
-                    // new link, use the new document's reference to fill in blanks.
-                    newLinkReference =
-                        getDefaultStringSpaceReferenceResolver().resolve(referenceString, newDocumentReference);
-                }
+                // current link, use the old document's reference to fill in blanks.
+                EntityReference oldLinkReference =
+                    getResourceReferenceEntityReferenceResolver()
+                        .resolve(resourceReference, null, oldDocumentReference);
+                // new link, use the new document's reference to fill in blanks.
+                EntityReference newLinkReference =
+                    getResourceReferenceEntityReferenceResolver()
+                        .resolve(resourceReference, null, newDocumentReference);
 
                 // If the new and old link references don`t match, then we must update the relative link.
                 if (!newLinkReference.equals(oldLinkReference)) {
@@ -7097,7 +7063,7 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
     /**
      * Note that this method cannot be removed for now since it's used by Hibernate for saving a XWikiDocument.
      *
-     * @param syntaxId the new syntax id to set (eg "xwiki/1.0", "xwiki/2.0", etc)
+     * @param syntaxId the new syntax id to set (e.g. {@code xwiki/2.0}, {@code xwiki/2.1}, etc)
      * @see #getSyntaxId()
      * @deprecated since 2.3M1, use {link #setSyntax(Syntax)} instead
      */
@@ -8412,7 +8378,7 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
     /**
      * Convert the current document content from its current syntax to the new syntax passed as parameter.
      *
-     * @param targetSyntaxId the syntax to convert to (eg "xwiki/2.0", "xhtml/1.0", etc)
+     * @param targetSyntaxId the syntax to convert to (e.g. {@code xwiki/2.0}, {@code xhtml/1.0}, etc)
      * @throws XWikiException if an exception occurred during the conversion process
      */
     public void convertSyntax(String targetSyntaxId, XWikiContext context) throws XWikiException
@@ -8428,7 +8394,7 @@ public class XWikiDocument implements DocumentModelBridge, Cloneable
     /**
      * Convert the current document content from its current syntax to the new syntax passed as parameter.
      *
-     * @param targetSyntax the syntax to convert to (eg "xwiki/2.0", "xhtml/1.0", etc)
+     * @param targetSyntax the syntax to convert to (e.g. {@code xwiki/2.0}, {@code xhtml/1.0}, etc)
      * @throws XWikiException if an exception occurred during the conversion process
      */
     public void convertSyntax(Syntax targetSyntax, XWikiContext context) throws XWikiException

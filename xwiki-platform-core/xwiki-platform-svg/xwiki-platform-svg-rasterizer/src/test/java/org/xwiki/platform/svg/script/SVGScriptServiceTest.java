@@ -40,10 +40,10 @@ import org.xwiki.url.ExtendedURL;
 import static org.mockito.Mockito.when;
 
 /**
- * Tests for the {@link PatientDataScriptService} component.
+ * Tests for the {@link SVGScriptService} component.
  *
  * @version $Id$
- * @since 1.0M1
+ * @since 8.0M1
  */
 public class SVGScriptServiceTest
 {
