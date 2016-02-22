@@ -24,7 +24,6 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.xwiki.component.annotation.Component;
-import org.xwiki.context.Execution;
 import org.xwiki.extension.Extension;
 import org.xwiki.extension.ExtensionId;
 import org.xwiki.extension.repository.result.IterableResult;
@@ -35,7 +34,7 @@ import org.xwiki.stability.Unstable;
 
 /**
  * Script service to find flavors.
- *  
+ * 
  * @version $Id$
  * @since 7.1M2
  */
@@ -45,19 +44,12 @@ import org.xwiki.stability.Unstable;
 @Unstable
 public class FlavorManagerScriptService implements ScriptService
 {
-    /**
-     * The key under which the last encountered error is stored in the current execution context.
-     */
-    private static final String ERROR_KEY = "scriptservice.flavor.error";
-    
     @Inject
     private FlavorManager flavorManager;
 
-    @Inject
-    private Execution execution;
-
     /**
      * Creates a flavor query.
+     * 
      * @return a new flavor query
      */
     public FlavorQuery createFlavorQuery()
@@ -67,6 +59,7 @@ public class FlavorManagerScriptService implements ScriptService
 
     /**
      * Creates a flavor query.
+     * 
      * @param query the query to execute
      * @return a new flavor query
      */
@@ -77,43 +70,37 @@ public class FlavorManagerScriptService implements ScriptService
 
     /**
      * Get all flavors matching a query.
+     * 
      * @param query query to execute
      * @return flavors matching the query
+     * @deprecated since 8.0M2, use {@link #search(FlavorQuery)} instead
      */
+    @Deprecated
     public IterableResult<Extension> getFlavors(FlavorQuery query)
     {
-        return flavorManager.getFlavors(query);
+        return this.flavorManager.getFlavors(query);
+    }
+
+    /**
+     * Get all flavors matching a query.
+     * 
+     * @param query query to execute
+     * @return flavors matching the query
+     * @since 8.0M2
+     */
+    public IterableResult<Extension> search(FlavorQuery query)
+    {
+        return this.flavorManager.search(query);
     }
 
     /**
      * Get the flavor installed on a given wiki.
+     * 
      * @param wikiId id of the wiki
      * @return the id of the flavor installed on the given wiki or null if there is no flavor installed
      */
     public ExtensionId getFlavorOfWiki(String wikiId)
     {
-        return flavorManager.getFlavorOfWiki(wikiId);
-    }
-
-    /**
-     * Get the error generated while performing the previously called action.
-     * @return an eventual exception or {@code null} if no exception was thrown
-     * @since 1.1
-     */
-    public Exception getLastError()
-    {
-        return (Exception) this.execution.getContext().getProperty(ERROR_KEY);
-    }
-
-    /**
-     * Store a caught exception in the context, so that it can be later retrieved using {@link #getLastError()}.
-     *
-     * @param e the exception to store, can be {@code null} to clear the previously stored exception
-     * @see #getLastError()
-     * @since 1.1
-     */
-    private void setLastError(Exception e)
-    {
-        this.execution.getContext().setProperty(ERROR_KEY, e);
+        return this.flavorManager.getFlavorOfWiki(wikiId);
     }
 }
