@@ -21,15 +21,21 @@ package org.xwiki.platform.flavor.job;
 
 import org.xwiki.extension.job.InstallRequest;
 import org.xwiki.job.Request;
+import org.xwiki.platform.flavor.FlavorQuery;
 
 /**
- * Request used in {@link org.xwiki.platform.flavor.internal.job.FlavorSearchPlanJob}.
+ * Request used in {@link org.xwiki.platform.flavor.internal.job.FlavorSearchJob}.
  *
  * @version $Id$
- * @since 8.0M2
+ * @since 8.0RC1
  */
 public class FlavorSearchRequest extends InstallRequest
 {
+    /**
+     * @see #getExtensionProperties()
+     */
+    public static final String PROPERTY_QUERY = "flavor.query";
+
     /**
      * Default constructor.
      */
@@ -46,4 +52,19 @@ public class FlavorSearchRequest extends InstallRequest
         super(request);
     }
 
+    /**
+     * @return the flavor query to execute
+     */
+    public FlavorQuery getQuery()
+    {
+        return getProperty(PROPERTY_QUERY);
+    }
+
+    /**
+     * @param query the flavor query to execute
+     */
+    public void setQuery(FlavorQuery query)
+    {
+        setProperty(PROPERTY_QUERY, query);
+    }
 }

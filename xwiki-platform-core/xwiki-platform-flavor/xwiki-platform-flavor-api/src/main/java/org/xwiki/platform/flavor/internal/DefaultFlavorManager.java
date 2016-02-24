@@ -60,11 +60,11 @@ public class DefaultFlavorManager implements FlavorManager
     @Deprecated
     public IterableResult<Extension> getFlavors(FlavorQuery query)
     {
-        return search(query);
+        return searchFlavors(query);
     }
 
     @Override
-    public IterableResult<Extension> search(FlavorQuery query)
+    public IterableResult<Extension> searchFlavors(FlavorQuery query)
     {
         return extensionRepositoryManager.search(query);
     }

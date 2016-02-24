@@ -42,7 +42,7 @@ import com.xpn.xwiki.user.api.XWikiRightService;
  * Initialize main wiki descriptor with what come from the first request.
  * 
  * @version $Id$
- * @since 8.0M1
+ * @since 8.0RC1
  */
 @Component
 @Named("XWiki.XWikiServerXwiki")

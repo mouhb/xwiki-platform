@@ -19,6 +19,9 @@
  */
 package org.xwiki.platform.flavor.script;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -27,9 +30,14 @@ import org.xwiki.component.annotation.Component;
 import org.xwiki.extension.Extension;
 import org.xwiki.extension.ExtensionId;
 import org.xwiki.extension.repository.result.IterableResult;
+import org.xwiki.extension.script.AbstractExtensionScriptService;
+import org.xwiki.job.Job;
+import org.xwiki.job.JobException;
 import org.xwiki.platform.flavor.FlavorManager;
 import org.xwiki.platform.flavor.FlavorQuery;
-import org.xwiki.script.service.ScriptService;
+import org.xwiki.platform.flavor.internal.job.FlavorSearchJob;
+import org.xwiki.platform.flavor.internal.job.FlavorSearchStatus;
+import org.xwiki.platform.flavor.job.FlavorSearchRequest;
 import org.xwiki.stability.Unstable;
 
 /**
@@ -39,13 +47,23 @@ import org.xwiki.stability.Unstable;
  * @since 7.1M2
  */
 @Component
-@Named("flavor")
+@Named(FlavorManagerScriptService.ROLEHINT)
 @Singleton
 @Unstable
-public class FlavorManagerScriptService implements ScriptService
+public class FlavorManagerScriptService extends AbstractExtensionScriptService
 {
+    /**
+     * The role hint of this component.
+     */
+    public static final String ROLEHINT = "flavor";
+
     @Inject
     private FlavorManager flavorManager;
+
+    private List<String> getSearchJobId(String namespace)
+    {
+        return Arrays.asList(ROLEHINT, "search", namespace);
+    }
 
     /**
      * Creates a flavor query.
@@ -73,7 +91,7 @@ public class FlavorManagerScriptService implements ScriptService
      * 
      * @param query query to execute
      * @return flavors matching the query
-     * @deprecated since 8.0M2, use {@link #search(FlavorQuery)} instead
+     * @deprecated since 8.0RC1, use {@link #searchFlavors(FlavorQuery)} instead
      */
     @Deprecated
     public IterableResult<Extension> getFlavors(FlavorQuery query)
@@ -82,15 +100,53 @@ public class FlavorManagerScriptService implements ScriptService
     }
 
     /**
-     * Get all flavors matching a query.
+     * Search for all flavors matching a query.
      * 
      * @param query query to execute
      * @return flavors matching the query
-     * @since 8.0M2
+     * @since 8.0RC1
      */
-    public IterableResult<Extension> search(FlavorQuery query)
+    public IterableResult<Extension> searchFlavors(FlavorQuery query)
     {
-        return this.flavorManager.search(query);
+        return this.flavorManager.searchFlavors(query);
+    }
+
+    /**
+     * @param namespace the namespace where to validate the flavors
+     * @return the status of the current or last flavor search
+     */
+    public FlavorSearchStatus getSearchValidFlavorsStatus(String namespace)
+    {
+        return (FlavorSearchStatus) getJobStatus(getSearchJobId(namespace));
+    }
+
+    /**
+     * Start a Job search and validating flavors matching a provided flacro query.
+     * 
+     * @param query the query to control the flavors to search
+     * @param namespace the namespace where to validate the flavors
+     * @return the {@link Job} searching the flavors
+     */
+    public Job searchValidFlavors(FlavorQuery query, String namespace)
+    {
+        setError(null);
+
+        Job job = null;
+        try {
+            FlavorSearchRequest flavorRequest = new FlavorSearchRequest();
+
+            flavorRequest.setId(getSearchJobId(namespace));
+            flavorRequest.setQuery(query);
+            flavorRequest.addNamespace(namespace);
+
+            setRightsProperties(flavorRequest);
+
+            job = this.jobExecutor.execute(FlavorSearchJob.JOBTYPE, flavorRequest);
+        } catch (JobException e) {
+            setError(e);
+        }
+
+        return job;
     }
 
     /**

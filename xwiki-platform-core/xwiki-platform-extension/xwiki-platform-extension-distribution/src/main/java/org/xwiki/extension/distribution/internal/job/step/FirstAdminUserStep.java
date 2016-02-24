@@ -17,7 +17,7 @@ import com.xpn.xwiki.plugin.rightsmanager.RightsManager;
  * Register a new owner if no user exist.
  * 
  * @version $Id$
- * @since 8.0M1
+ * @since 8.0RC1
  */
 @Component
 @Named(FirstAdminUserStep.ID)

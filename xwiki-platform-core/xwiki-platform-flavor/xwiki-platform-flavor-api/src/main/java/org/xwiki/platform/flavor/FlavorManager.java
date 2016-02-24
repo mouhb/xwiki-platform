@@ -38,7 +38,7 @@ public interface FlavorManager
      * 
      * @param query query to execute
      * @return flavors matching the query
-     * @deprecated since 8.0M2, use {@link #search(FlavorQuery)} instead
+     * @deprecated since 8.0RC1, use {@link #searchFlavors(FlavorQuery)} instead
      */
     @Deprecated
     IterableResult<Extension> getFlavors(FlavorQuery query);
@@ -48,9 +48,9 @@ public interface FlavorManager
      * 
      * @param query query to execute
      * @return flavors matching the query
-     * @since 8.0M2
+     * @since 8.0RC1
      */
-    IterableResult<Extension> search(FlavorQuery query);
+    IterableResult<Extension> searchFlavors(FlavorQuery query);
 
     /**
      * Get the flavor installed on a given wiki.
