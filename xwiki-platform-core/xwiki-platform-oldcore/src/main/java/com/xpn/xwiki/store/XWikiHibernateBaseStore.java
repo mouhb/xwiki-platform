@@ -106,6 +106,8 @@ public class XWikiHibernateBaseStore implements Initializable
 
     private DatabaseProduct databaseProduct = DatabaseProduct.UNKNOWN;
 
+    private Dialect dialect;
+
     /**
      * THis allows to initialize our storage engine. The hibernate config file path is taken from xwiki.cfg or directly
      * in the WEB-INF directory.
@@ -492,7 +494,6 @@ public class XWikiHibernateBaseStore implements Initializable
         Session session;
         Connection connection;
         DatabaseMetadata meta;
-        Dialect dialect = Dialect.getDialect(getConfiguration().getProperties());
         boolean bTransaction = true;
         String dschema = null;
 
@@ -518,8 +519,8 @@ public class XWikiHibernateBaseStore implements Initializable
                 }
             }
 
-            meta = new DatabaseMetadata(connection, dialect);
-            schemaSQL = config.generateSchemaUpdateScript(dialect, meta);
+            meta = new DatabaseMetadata(connection, getDialect());
+            schemaSQL = config.generateSchemaUpdateScript(getDialect(), meta);
 
             // In order to circumvent a bug in Hibernate (See the javadoc of XWHS#createHibernateSequenceIfRequired for
             // details), we need to ensure that Hibernate will create the "hibernate_sequence" sequence.
@@ -800,7 +801,6 @@ public class XWikiHibernateBaseStore implements Initializable
     protected String escapeSchema(String schema, XWikiContext context)
     {
         String escapedSchema;
-        Dialect dialect = Dialect.getDialect(getConfiguration().getProperties());
 
         // - Oracle converts user names in uppercase when no quotes is used.
         // For example: "create user xwiki identified by xwiki;" creates a user named XWIKI (uppercase)
@@ -812,8 +812,8 @@ public class XWikiHibernateBaseStore implements Initializable
         if (DatabaseProduct.ORACLE == databaseProduct) {
             escapedSchema = schema;
         } else {
-            String closeQuote = String.valueOf(dialect.closeQuote());
-            escapedSchema = dialect.openQuote() + schema.replace(closeQuote, closeQuote + closeQuote) + closeQuote;
+            String closeQuote = String.valueOf(getDialect().closeQuote());
+            escapedSchema = getDialect().openQuote() + schema.replace(closeQuote, closeQuote + closeQuote) + closeQuote;
         }
 
         return escapedSchema;
@@ -1501,5 +1501,18 @@ public class XWikiHibernateBaseStore implements Initializable
         }
 
         return xcontext;
+    }
+
+    /**
+     * @return a singleton instance of the configured {@link Dialect}
+     * @since 8.4RC1
+     */
+    public Dialect getDialect()
+    {
+        if (this.dialect == null) {
+            this.dialect = Dialect.getDialect(getConfiguration().getProperties());
+        }
+
+        return this.getDialect();
     }
 }
