@@ -41,6 +41,7 @@
   <hidden>true</hidden>
   <content>{{velocity output="false"}}
 #set ($discard = $xwiki.ssx.use('Help.Code.VelocityMacros'))
+#set ($docextras = [])
 
 #macro (helpActionCard $data)
   &lt;div class="well"&gt;
@@ -103,10 +104,11 @@
   #end
   #set ($examplesURL = $NULL)
   #if ($data.examples)
-    #set ($parts = $data.examples.split('#'))
-    #if ($parts &amp;&amp; $parts.size() == 2)
-      #set ($examplesURL = $xwiki.getURL($parts[0], 'view', $NULL, $parts[1]))
+    #if ($data.examples.startsWith('/'))
+      ## Relative internal URL
+      #set ($examplesURL = $data.examples)
     #else
+      ## Page reference
       #set ($examplesURL = $xwiki.getURL($data.examples))
     #end
     #set ($url = $examplesURL)
