@@ -77,25 +77,6 @@
       <version>${rendering.version}</version>
       <scope>runtime</scope>
     </dependency>
-    <!-- Additional Help Center dependencies -->
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-rendering-macro-include</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-icon-script</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.xwiki.platform</groupId>
-      <artifactId>xwiki-platform-skin-skinx</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
     <!-- Test Dependencies -->
     <dependency>
       <groupId>org.xwiki.platform</groupId>
@@ -104,34 +85,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.xwiki.commons</groupId>
-        <artifactId>xwiki-commons-tool-xar-plugin</artifactId>
-        <executions>
-          <!-- Configure the default command-line-interface format mojo. -->
-          <execution>
-            <id>default-cli</id>
-            <configuration>
-              <excludes>
-                <!-- Skip this page because we preserve its history as demo content. -->
-                <exclude>**/Help/History/WebHome.xml</exclude>
-              </excludes>
-            </configuration>
-          </execution>
-          <!-- Configure the default verify mojo. -->
-          <execution>
-            <id>default-verify</id>
-            <configuration>
-              <excludes>
-                <!-- Skip this page because we preserve its history as demo content. -->
-                <exclude>**/Help/History/WebHome.xml</exclude>
-              </excludes>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
 </project>

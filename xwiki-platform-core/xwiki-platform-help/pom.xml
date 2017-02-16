@@ -32,6 +32,7 @@
   <packaging>pom</packaging>
   <description>Provides help within your wiki</description>
   <modules>
+    <module>xwiki-platform-help-center</module>
     <module>xwiki-platform-help-ui</module>
   </modules>
 </project>
