@@ -229,8 +229,10 @@
             </goals>
             <configuration>
               <files>
-                <file>${help.base.path}/Applications/AWM.gif</file>
-                <file>${help.base.path}/Applications/EM.gif</file>
+                <file>${help.base.path}/Applications/AWM.mp4</file>
+                <file>${help.base.path}/Applications/AWM.webm</file>
+                <file>${help.base.path}/Applications/EM.mp4</file>
+                <file>${help.base.path}/Applications/EM.webm</file>
               </files>
               <sourceDocument>${project.build.outputDirectory}/Help/Applications/WebHome.xml</sourceDocument>
               <outputDirectory>${project.build.outputDirectory}/Help</outputDirectory>
@@ -244,8 +246,10 @@
             </goals>
             <configuration>
               <files>
-                <file>${help.base.path}/Macros/EM.gif</file>
-                <file>${help.base.path}/Macros/Macro.gif</file>
+                <file>${help.base.path}/Macros/EM.mp4</file>
+                <file>${help.base.path}/Macros/EM.webm</file>
+                <file>${help.base.path}/Macros/Macro.mp4</file>
+                <file>${help.base.path}/Macros/Macro.webm</file>
               </files>
               <sourceDocument>${project.build.outputDirectory}/Help/Macros/WebHome.xml</sourceDocument>
               <outputDirectory>${project.build.outputDirectory}/Help</outputDirectory>
@@ -259,8 +263,10 @@
             </goals>
             <configuration>
               <files>
-                <file>${help.base.path}/Templates/Administration.gif</file>
-                <file>${help.base.path}/Templates/Template.gif</file>
+                <file>${help.base.path}/Templates/Administration.mp4</file>
+                <file>${help.base.path}/Templates/Administration.webm</file>
+                <file>${help.base.path}/Templates/Template.mp4</file>
+                <file>${help.base.path}/Templates/Template.webm</file>
               </files>
               <sourceDocument>${project.build.outputDirectory}/Help/Templates/WebHome.xml</sourceDocument>
               <outputDirectory>${project.build.outputDirectory}/Help</outputDirectory>
