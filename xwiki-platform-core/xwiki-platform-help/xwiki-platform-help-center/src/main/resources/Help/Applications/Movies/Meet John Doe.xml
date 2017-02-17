@@ -31,7 +31,7 @@
   <parent>Help.Applications.Movies.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1487085238000</date>
+  <date>1487346093000</date>
   <contentUpdateDate>1487085167000</contentUpdateDate>
   <version>1.1</version>
   <title>Meet John Doe</title>
@@ -81,7 +81,7 @@
         <customDisplay>{{include reference="AppWithinMinutes.Content"/}}</customDisplay>
         <disabled>0</disabled>
         <name>content1</name>
-        <number>7</number>
+        <number>8</number>
         <prettyName>Storyline</prettyName>
         <script/>
         <unmodifiable>0</unmodifiable>
@@ -89,6 +89,30 @@
         <validationRegExp/>
         <classType>com.xpn.xwiki.objects.classes.ComputedFieldClass</classType>
       </content1>
+      <databaseList1>
+        <cache>0</cache>
+        <classname/>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <idField/>
+        <multiSelect>0</multiSelect>
+        <name>databaseList1</name>
+        <number>7</number>
+        <picker>0</picker>
+        <prettyName>Director</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators/>
+        <size>1</size>
+        <sort>none</sort>
+        <sql>select doc.fullName, doc.title from XWikiDocument doc, BaseObject as obj where doc.fullName = obj.name and obj.className = 'Help.Applications.Contributors.Code.ContributorsClass' and doc.name &lt;&gt; 'ContributorsTemplate'</sql>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <valueField/>
+        <classType>com.xpn.xwiki.objects.classes.DBListClass</classType>
+      </databaseList1>
       <date1>
         <customDisplay>{{include reference="AppWithinMinutes.DateDisplayer" /}}</customDisplay>
         <dateFormat>dd/MM/yyyy</dateFormat>
@@ -168,6 +192,9 @@
     </class>
     <property>
       <boolean1>0</boolean1>
+    </property>
+    <property>
+      <databaseList1>Help.Applications.Contributors.Frank Capra</databaseList1>
     </property>
     <property>
       <date1>1941-05-03 00:00:00.0</date1>
