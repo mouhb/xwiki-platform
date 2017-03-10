@@ -47,5 +47,13 @@ blog.changeVisibility.changing=Modifier la visibilité
 blog.changeVisibility.success=La visibilité du blog a été modifiée avec succès
 blog.templateProvider.blogpost.description=Nouvelle postée sur un blog
 blog.templateProvider.blogpost.name=Article de Blog
+
+blog.manage.notitle=Aucun titre de blog fourni. Veuillez entrer le titre du blog.
+blog.manage.nopage=Vous n'avez pas donné le nom d'une page. Veuillez entrer le nom de la page dans laquelle vous souhitez que le blog soit créé.
+blog.manage.unallowed_page=L'emplacement blog est déjà utilisé, veuillez saisir une autre emplacement.
+blog.manage.location.title=Titre du blog
+blog.manage.location.title.hint=Titre du nouveau blog
+blog.manage.location.title.placeholder=Nouveau blog
+xe.blog.manage.categories_location=Emplacement des catégories
 </content>
 </xwikidoc>
